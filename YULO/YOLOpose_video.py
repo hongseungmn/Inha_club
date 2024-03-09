@@ -3,6 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from Point import Point
+#from PointResult import Point
 
 
 cap = cv2.VideoCapture('./data/people.mp4') # 웹캠 사용하기 코드
@@ -23,7 +24,7 @@ if cap.isOpened():
     ret, frame = cap.read()
     re_frame = cv2.resize(frame, (round(f_width*4), round(f_height*4)), interpolation=cv2.INTER_CUBIC)
     # Predict with the model
-    results = model(re_frame)  # predict on an image
+    results = model.predict(re_frame,conf=0.1)  # predict on an image
     #Extract keypoint
     result_keypoint_group = results[0].keypoints.xy.cpu().numpy()
     point_list = list()
@@ -37,7 +38,7 @@ if cap.isOpened():
       re_frame = point.drawImg()
 
     
-    cv2.imshow('Car_Video', re_frame)
+    cv2.imshow('_Video', re_frame)
     plt.show()
     key = cv2.waitKey(30)
     if key == ord('q'):
