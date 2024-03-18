@@ -21,10 +21,11 @@ import numpy as np
 # self.point_16 = arr[16] # 오른쪽 발목
 
 class Point: # 각 객체별 점을 저장할 클래스
-  def __init__(self, arr, img):
+  def __init__(self, point_arr, img, bbox):
     #각 좌표에 맞게 키포인트를 초기화한다
-    self.point_all = arr # 전체 포인트 배열을 담음
+    self.point_all = point_arr # 전체 포인트 배열을 담음
     self.img = img # 도형을 그리기 위해 이미지 변수 초기화
+    self.bbox = bbox # 검출 객체 bbox
     self.group = {
       'A':set(range(0, 7)),
       'B':set(range(11, 13)),
@@ -88,8 +89,9 @@ class Point: # 각 객체별 점을 저장할 클래스
       self.img = cv2.putText(self.img, str(index) ,(int(group_point_x),int(group_point_y)), cv2.FONT_HERSHEY_PLAIN, 1, (0,0,0),2)
       # 이전 점이 있을 경우에만 선 그리기
       if prev_point is not None:
-          # 이전 점과 현재 점을 연결하는 선 그리기
-          self.img = cv2.line(self.img, (int(prev_point[0]), int(prev_point[1])), (int(group_point_x), int(group_point_y)), (255, 0, 0), 2)
+        # 이전 점과 현재 점을 연결하는 선 그리기
+        self.img = cv2.line(self.img, (int(prev_point[0]), int(prev_point[1])), (int(group_point_x), int(group_point_y)), (255, 0, 0), 2)
+        # 현재 점과 이전 점을 통해 각도를 계산한다
       
       # 현재 점을 이전 점으로 설정
       prev_point = (group_point_x, group_point_y)
@@ -97,6 +99,7 @@ class Point: # 각 객체별 점을 저장할 클래스
   def definePoints(self):
     for index, point in enumerate(self.point_all):
       if point[0] == 0 and point[1] == 0: # point를 잘못 잡은 경우(절점의 경우)
+        self.img = cv2.putText(self.img, "Point Error!" ,(int(self.bbox[0][0]),int(self.bbox[0][1])), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,0),2)
         for group_name, group_set in self.group.items(): # 반복을 돌면서 각 포인트 그룹에 존재하는 index를 제거해준다
           if index in group_set:
             group_set.remove(index)
@@ -110,6 +113,11 @@ class Point: # 각 객체별 점을 저장할 클래스
     # 임시 리스트에 추가된 키들을 딕셔너리에서 삭제
     for key in keys_to_delete:
         del self.group[key]
+  
+  def calcAngle(self):
+    print('group_point : ',self.group_points)
+    
+    pass
     
           
           

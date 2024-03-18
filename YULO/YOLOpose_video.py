@@ -27,13 +27,14 @@ if cap.isOpened():
     results = model.predict(re_frame,conf=0.1)  # predict on an image
     #Extract keypoint
     result_keypoint_group = results[0].keypoints.xy.cpu().numpy()
+    result_bbox = results[0].boxes.xywh.cpu().numpy()
     point_list = list()
     #print('result_keypoint_group : ',result_keypoint_group)
     #result_keypoint_group 개체별 point 좌표 들어있음
     print('검출된 사람 수 : ',len(result_keypoint_group))
     for arr in result_keypoint_group:
       #각 개체별 검출된 키포인트 좌표를 리스트에 담는다
-      point = Point(arr, re_frame)
+      point = Point(arr, re_frame, result_bbox)
       point_list.append(point)
       re_frame = point.drawImg()
 
