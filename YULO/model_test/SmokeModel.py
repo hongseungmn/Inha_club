@@ -24,7 +24,7 @@ if cap.isOpened():
   
   while cap.isOpened():
     ret, frame = cap.read()
-    re_frame = cv2.resize(frame, (round(f_width*4), round(f_height*4)), interpolation=cv2.INTER_CUBIC)
+    re_frame = cv2.resize(frame, (round(f_width / 4), round(f_height / 4)), interpolation=cv2.INTER_CUBIC)
     temp = model(re_frame)
     if ret:
         temp_frame = np.squeeze(temp.render())
