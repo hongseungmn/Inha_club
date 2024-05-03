@@ -6,8 +6,9 @@ from Point import Point
 #from PointResult import Point
 
 
-cap = cv2.VideoCapture('./data/people.mp4') # 웹캠 사용하기 코드
+cap = cv2.VideoCapture('../data/videos_FALL/test02.mp4') # 웹캠 사용하기 코드
 model = YOLO('yolov8n-pose.pt')  # 모델 불러오기 코드
+#model = YOLO('weights/yolov8x-pose.pt')
 
 if cap.isOpened():
   fps = cap.get(cv2.CAP_PROP_FPS)
@@ -22,9 +23,9 @@ if cap.isOpened():
   
   while cap.isOpened():
     ret, frame = cap.read()
-    re_frame = cv2.resize(frame, (round(f_width*4), round(f_height*4)), interpolation=cv2.INTER_CUBIC)
+    re_frame = cv2.resize(frame, (round(f_width), round(f_height)), interpolation=cv2.INTER_CUBIC)
     # Predict with the model
-    results = model.predict(re_frame,conf=0.1)  # predict on an image
+    results = model.predict(re_frame,conf=0.01,verbose=False)  # predict on an image
     #Extract keypoint
     result_keypoint_group = results[0].keypoints.xy.cpu().numpy()
     result_bbox = results[0].boxes.xywh.cpu().numpy()

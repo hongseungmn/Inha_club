@@ -7,8 +7,8 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-sys.path.insert(0, './model')
-model = torch.hub.load('./yolov5', 'custom', path='./model/best.pt', source='local')
+sys.path.insert(0, '../model')
+model = torch.hub.load('./yolov5', 'custom', path='../model/best.pt', source='local')
 cap = cv2.VideoCapture(0) # 웹캠 사용하기 코드
 
 if cap.isOpened():
